@@ -12,7 +12,7 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: "/api/eliminar-cliente",
+        source: "/pavill-delete-account/api/eliminar-cliente",
         destination: "http://rtpavillv2.ddns.net:8014/apptaxipavillv3/webservice/JnCliente.php",
       },
     ];
