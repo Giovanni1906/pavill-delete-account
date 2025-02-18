@@ -59,7 +59,7 @@ export default function Home() {
     }
 
     try {
-      const url = `http://rtpavillv2.ddns.net:8014/apptaxipavillv3/webservice/JnCliente.php?Accion=EliminarCliente&ClienteEmail=${encodeURIComponent(email)}&ClienteContrasena=${encodeURIComponent(password)}`;
+      const url = `https://cors-anywhere.herokuapp.com/http://rtpavillv2.ddns.net:8014/apptaxipavillv3/webservice/JnCliente.php?Accion=EliminarCliente&ClienteEmail=${encodeURIComponent(email)}&ClienteContrasena=${encodeURIComponent(password)}`;
       const response = await fetch(url);
       const data = await response.json();
 
