@@ -123,7 +123,7 @@ export default function Home() {
       <div className="bg-[#410099] text-white flex flex-col items-center p-8 rounded-xl shadow-lg w-96">
         {/* Logo centrado */}
         <div className="mb-4">
-          <Image src="/logo.png" alt="Pavill Logo" width={120} height={120} />
+          <Image src="/pavill-delete-account/logo.png" alt="Pavill Logo" width={120} height={120} />
         </div>
 
         <h2 className="text-2xl font-semibold text-center mb-4">Eliminar Cuenta</h2>
