@@ -8,6 +8,7 @@ const nextConfig = {
 };
 
 module.exports = {
+  basePath: "/pavill-delete-account",
   async rewrites() {
     return [
       {
