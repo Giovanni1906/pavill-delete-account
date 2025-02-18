@@ -107,6 +107,7 @@ export default function Home() {
           });
       }
     } catch (error) {
+      console.log(error); // Esto evitará el error
       Swal.fire({
         title: "Error",
         text: "No se pudo conectar con el servidor.",
