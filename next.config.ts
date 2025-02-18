@@ -1,7 +1,19 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: "export",
+  basePath: "/pavill-delete-account", // Nombre del repositorio en GitHub
+  images: {
+    unoptimized: true,
+  },
 };
 
-export default nextConfig;
+module.exports = {
+  async rewrites() {
+    return [
+      {
+        source: "/api/eliminar-cliente",
+        destination: "http://rtpavillv2.ddns.net:8014/apptaxipavillv3/webservice/JnCliente.php",
+      },
+    ];
+  },
+};

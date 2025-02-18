@@ -1,101 +1,158 @@
+"use client";
+import { useState } from "react";
 import Image from "next/image";
+import Swal from "sweetalert2";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  // Función para solicitar eliminación
+  const handleDeleteRequest = () => {
+    if (!validateEmail(email)) {
+      Swal.fire({
+        title: "Error",
+        text: "Por favor ingresa un email válido.",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+      return;
+    }
+
+    // Mostrar modal flotante de confirmación
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Para confirmar, escribe 'ELIMINAR_CUENTA'",
+      input: "text",
+      inputPlaceholder: "ELIMINAR_CUENTA",
+      showCancelButton: true,
+      confirmButtonColor: "#FF6B00",
+      cancelButtonColor: "#410099",
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+      inputValidator: (value) => {
+        if (value !== "ELIMINAR_CUENTA") {
+          return "Debes escribir exactamente 'ELIMINAR_CUENTA'";
+        }
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleFinalDelete();
+      }
+    });
+  };
+
+  // Función para eliminar cuenta
+  const handleFinalDelete = async () => {
+    if (!validateEmail(email)) {
+      Swal.fire({
+        title: "Error",
+        text: "El email no es válido.",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+      return;
+    }
+
+    try {
+      const url = `/api/eliminar-cliente?Accion=EliminarCliente&ClienteEmail=${encodeURIComponent(email)}&ClienteContrasena=${encodeURIComponent(password)}`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      switch (data.Respuesta) {
+        case "E001":
+          Swal.fire({
+            title: "Cuenta Eliminada",
+            text: "Lamentamos tu partida, pero te esperamos de vuelta cuando desees.",
+            icon: "success",
+            confirmButtonText: "Continuar",
+          }).then(() => {
+            window.location.href = "https://pavill.com/app";
+          });
+          break;
+        case "E002":
+          Swal.fire({
+            title: "Error",
+            text: "No se pudo eliminar la cuenta. Inténtalo de nuevo.",
+            icon: "error",
+            confirmButtonText: "Ok",
+          });
+          break;
+        case "E003":
+          Swal.fire({
+            title: "Error",
+            text: "No encontramos la cuenta en nuestra base de datos.",
+            icon: "error",
+            confirmButtonText: "Ok",
+          });
+          break;
+        case "E004":
+          Swal.fire({
+            title: "Error",
+            text: "Faltan parámetros. Ingresa email y contraseña.",
+            icon: "error",
+            confirmButtonText: "Ok",
+          });
+          break;
+        default:
+          Swal.fire({
+            title: "Error",
+            text: "Ocurrió un error desconocido.",
+            icon: "error",
+            confirmButtonText: "Ok",
+          });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo conectar con el servidor.",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      {/* Caja principal */}
+      <div className="bg-[#410099] text-white flex flex-col items-center p-8 rounded-xl shadow-lg w-96">
+        {/* Logo centrado */}
+        <div className="mb-4">
+          <Image src="/logo.png" alt="Pavill Logo" width={120} height={120} />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        <h2 className="text-2xl font-semibold text-center mb-4">Eliminar Cuenta</h2>
+
+        {/* Input Email */}
+        <input
+          type="email"
+          placeholder="Tu Email"
+          className="w-full px-4 py-2 border rounded-lg text-gray-800 mb-3 focus:outline-none"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        {/* Input Contraseña */}
+        <input
+          type="password"
+          placeholder="Contraseña"
+          className="w-full px-4 py-2 border rounded-lg text-gray-800 mb-5 focus:outline-none"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        {/* Botón Solicitar Eliminación */}
+        <button
+          className="w-full bg-[#FF6B00] text-white font-semibold py-2 rounded-lg hover:bg-[#e65a00] transition duration-300"
+          onClick={handleDeleteRequest}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          Solicitar Eliminación
+        </button>
+      </div>
     </div>
   );
 }
