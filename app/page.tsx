@@ -59,11 +59,20 @@ export default function Home() {
     }
 
     try {
-      const url = `https://cors-anywhere.herokuapp.com/http://rtpavillv2.ddns.net:8014/apptaxipavillv3/webservice/JnCliente.php?Accion=EliminarCliente&ClienteEmail=${encodeURIComponent(email)}&ClienteContrasena=${encodeURIComponent(password)}`;
+      const apiUrl = `http://rtpavillv2.ddns.net:8014/apptaxipavillv3/webservice/JnCliente.php?Accion=EliminarCliente&ClienteEmail=${encodeURIComponent(email)}&ClienteContrasena=${encodeURIComponent(password)}`;
+
+      const url = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+
       const response = await fetch(url);
       const data = await response.json();
 
-      switch (data.Respuesta) {
+      if (!data.contents) {
+        throw new Error("Respuesta vacía del servidor");
+      } 
+      
+      const parsedData = JSON.parse(data.contents); // Convertir a JSON válido
+
+      switch (parsedData.Respuesta) {
         case "E001":
           Swal.fire({
             title: "Cuenta Eliminada",
@@ -107,7 +116,7 @@ export default function Home() {
           });
       }
     } catch (error) {
-      console.log(error); // Esto evitará el error
+      console.log(error); // Para error de ESLink
       Swal.fire({
         title: "Error",
         text: "No se pudo conectar con el servidor.",
