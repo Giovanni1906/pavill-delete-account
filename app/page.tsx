@@ -26,17 +26,17 @@ export default function Home() {
     // Mostrar modal flotante de confirmación
     Swal.fire({
       title: "¿Estás seguro?",
-      text: "Para confirmar, escribe 'ELIMINAR_CUENTA'",
+      text: "Para continuar con el proceso de eliminación definitiva de tus datos, escribe exactamente 'ELIMINAR_CUENTA' en la casilla de abajo",
       input: "text",
       inputPlaceholder: "ELIMINAR_CUENTA",
       showCancelButton: true,
       confirmButtonColor: "#FF6B00",
       cancelButtonColor: "#410099",
-      confirmButtonText: "Eliminar",
+      confirmButtonText: "Eliminar cuenta definitivamente",
       cancelButtonText: "Cancelar",
       inputValidator: (value) => {
         if (value !== "ELIMINAR_CUENTA") {
-          return "Debes escribir exactamente 'ELIMINAR_CUENTA'";
+          return "debes escribir exactamente 'ELIMINAR_CUENTA'";
         }
       },
     }).then((result) => {
@@ -127,7 +127,11 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+    <div className="flex bg-[#410099] flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+            {/* Título principal */}
+      <h1 className="text-2xl md:text-3xl font-bold text-center text-[#410099] mb-6">
+        Proceso de eliminación de cuenta de RadioTaxi Pavill
+      </h1>
       {/* Caja principal */}
       <div className="bg-[#410099] text-white flex flex-col items-center p-8 rounded-xl shadow-lg w-96">
         {/* Logo centrado */}
@@ -135,7 +139,11 @@ export default function Home() {
           <Image src="/pavill-delete-account/logo.png" alt="Pavill Logo" width={120} height={120} />
         </div>
 
-        <h2 className="text-2xl font-semibold text-center mb-4">Eliminar Cuenta</h2>
+        {/* Subtítulo dentro de la caja */}
+        <h2 className="text-xl font-semibold text-center mb-2">Eliminar Cuenta</h2>
+        <p className="text-sm text-gray-300 text-center mb-4">
+          Ingrese su usuario y contraseña para proceder con la eliminación definitiva de la cuenta.
+        </p>
 
         {/* Input Email */}
         <input
@@ -160,7 +168,7 @@ export default function Home() {
           className="w-full bg-[#FF6B00] text-white font-semibold py-2 rounded-lg hover:bg-[#e65a00] transition duration-300"
           onClick={handleDeleteRequest}
         >
-          Solicitar Eliminación
+          Solicitar Eliminación de cuenta
         </button>
       </div>
     </div>
